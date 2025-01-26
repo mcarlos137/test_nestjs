@@ -61,7 +61,7 @@ $ npm run test:cov
 
 Connecting to external WS to collect crypto order books information to transform and store in different formats
 
-### Components implemented
+## Components implemented
 
 - Microservices: REDIS (PUB/SUB, Hashs & Streams) and RabbitMQ
 - Filters: Exceptions (HTTP & Query)

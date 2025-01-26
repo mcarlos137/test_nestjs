@@ -36,13 +36,13 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
+$ npm run start --env-file .env
 
 # watch mode
-$ npm run start:dev
+$ npm run start:dev --env-file .env
 
 # production mode
-$ npm run start:prod
+$ npm run start:prod --env-file .env
 ```
 
 ## Run tests

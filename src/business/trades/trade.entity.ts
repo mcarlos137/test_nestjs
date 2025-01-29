@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
-import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { NextVal } from 'typeorm-sequence';
+import { Entity, Column, PrimaryColumn, BeforeInsert } from 'typeorm';
 import { TradeSide } from './trade.enum';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
@@ -8,10 +7,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Trade {
 
-  @PrimaryColumn({
-    generated: 'increment',
-    default: () => `nextval('trades_seq'::regclass)`
-  })
+  @PrimaryColumn()
   @Field(type => Int)
   id?: number;
 
@@ -63,5 +59,10 @@ export class Trade {
   @Column({ nullable: false })
   @Field(type => String)
   exchange: string;
+
+  @BeforeInsert()
+  async setId?() {
+    //this.id = 4342;
+  }
 
 }

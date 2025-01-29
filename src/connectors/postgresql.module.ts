@@ -15,7 +15,7 @@ const PostgresqlTypeOrmModule = TypeOrmModule.forRoot({
     entities: [Order, Trade],
     synchronize: false,
     logging: true,
-    cache: true
+    cache: true,
 })
 
 @Module({

@@ -30,13 +30,16 @@ export class TradesService {
   }
 
   async create(trade: Trade): Promise<Trade> {
+    const result = await this.tradesRepository
+      .query("SELECT NEXTVAL('trades_seq') AS id")
     const newTrade = this.tradesRepository.create({
       ...trade,
+      id: result[0].id,
       timestamp: new Date().getTime(),
     });
     await this.tradesRepository.insert(newTrade)
     console.log('----------- new trade', newTrade)
-    return trade;
+    return newTrade;
   }
 
 }

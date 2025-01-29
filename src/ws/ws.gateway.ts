@@ -20,9 +20,16 @@ export class WSGateway implements OnGatewayDisconnect {
     server: Server;
 
     @SubscribeMessage('SUBSCRIBE')
-    onEvent(client: any, data: { method: string; operation: string, channel: string }): Observable<string> {
+    onEventSubscribe(client: any, data: { method: string; operation: string, channel: string }): Observable<string> {
         WsSessionsSingleton.getInstance().addSession(data.operation, data.channel, client)
         return of('SUBSCRIBED TO ORDERBOOK CHANNEL ' + data.channel).pipe();
+    }
+
+    @SubscribeMessage('UNSUBSCRIBE')
+    onEventUnsubscribe(client: any, data: { method: string; operation: string, channel: string }): Observable<string> {
+        WsSessionsSingleton.getInstance().addSession(data.operation, data.channel, client)
+        WsSessionsSingleton.getInstance().removeSessions(data.operation, data.channel)
+        return of('UNSUBSCRIBED TO ORDERBOOK CHANNEL ' + data.channel).pipe();
     }
 
     handleDisconnect(client: any) {

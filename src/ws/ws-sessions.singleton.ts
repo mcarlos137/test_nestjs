@@ -33,10 +33,16 @@ export class WsSessionsSingleton {
 
     addSession = (operation: string, channel: string, webSocketSession: any): void => {
         this.getSessions<Set<unknown>>(operation, channel).add(webSocketSession);
+        console.log(this.getSessions(operation))
     }
 
-    removeSessions = (operation: string) => {
-        this.getSessions<Map<string, Set<unknown>>>(operation).clear();
+    removeSessions = (operation: string, channel: string | undefined = undefined) => {
+        if(channel){
+            this.getSessions<Map<string, Set<unknown>>>(operation, channel).clear();
+        } else {
+            this.getSessions<Map<string, Set<unknown>>>(operation).clear();
+        }
+        console.log(this.getSessions('orderBook'))
     }
 
 }

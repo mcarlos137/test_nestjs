@@ -15,7 +15,7 @@ import { Server } from 'ws';
 export class WSGateway implements OnGatewayDisconnect {
 
     constructor() { }
-
+    
     @WebSocketServer()
     server: Server;
 

@@ -28,7 +28,6 @@ export class OrderBooksController {
     @MessagePattern('order_book_transformation_basic', Transport.REDIS)
     receiveOrderBookTB(@Payload() orderBook: OrderBook, @Ctx() context: RedisContext) {
         const orderBookTB: OrderBookTB = new OrderBookTB(orderBook)
-        //console.log(orderBookTB)
         this.orderBooksService.sendToRedis(orderBookTB)
         const dataFolder = join(
             String(process.env.BASE_FOLDER),

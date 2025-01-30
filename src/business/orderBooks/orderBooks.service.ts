@@ -4,15 +4,22 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { OrderBook } from "./orderBook.pojo";
 import { OrderBooksWSSyncEvent } from "./orderBooks-ws-sync.event";
 import { OrderBookTB } from "./orderBook-tb.pojo";
+import Redis from "ioredis";
 
 
 @Injectable()
 export class OrderBooksService {
 
+    private sender: Redis;
+
     constructor(
         @Inject('REDIS_CLIENT') private redisClient: ClientProxy,
         private eventEmitter: EventEmitter2
-    ) { }
+    ) {
+        this.redisClient.connect()
+        const [sender] = this.redisClient.unwrap<[import('ioredis').Redis]>();
+        this.sender = sender
+    }
 
     sendToEventEmitter(orderBook: OrderBook): string {
         this.eventEmitter.emit('orderBook.wssync', new OrderBooksWSSyncEvent(orderBook))
@@ -20,19 +27,18 @@ export class OrderBooksService {
     }
 
     sendToRedis(orderBookTB: OrderBookTB): string {
-        const [sender] = this.redisClient.unwrap<[import('ioredis').Redis]>();
-        sender.hset(orderBookTB.time.toString(), orderBookTB)
+        console.log('orderBookTB', orderBookTB)
+        this.sender.hset(orderBookTB.time.toString(), orderBookTB)
         return 'Order Book TB SENT to Redis Hash'
     }
 
     sendToRedisPubSub(orderBook: OrderBook): string {
-        this.redisClient.emit('order_book_transformation_basic', orderBook)
+        this.sender.emit('order_book_transformation_basic', orderBook)
         return 'Order Book SENT to Redis PUB/SUB'
     }
 
     sendToRedisStream(orderBook: OrderBook): string {
-        const [sender] = this.redisClient.unwrap<[import('ioredis').Redis]>();
-        sender.xadd("order_book", "*", "payload", JSON.stringify(orderBook));
+        this.sender.xadd("order_book", "*", "payload", JSON.stringify(orderBook));
         return 'Order Book SENT to Redis Stream'
     }
 

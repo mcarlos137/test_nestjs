@@ -18,6 +18,7 @@ require('dotenv').config({ path: '.env' })
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({origin: '*'})
 
   app.connectMicroservice<MicroserviceOptions>(rabbitmqMicroserviceConfig1)
   app.connectMicroservice<MicroserviceOptions>(redisMicroserviceConfig)
